@@ -1,4 +1,8 @@
 package com.home.prj.dto.response;
 
-public class LoginResponse {
+public record LoginResponse (
+        String token,
+        String tokenType,
+        String message
+){
 }

@@ -2,7 +2,7 @@ package com.home.prj.dto.response;
 
 import java.time.LocalDateTime;
 
-public record ErrorResponse(
+public record ApiErrorResponse(
         LocalDateTime timestamp,
         int status,
         String error,
