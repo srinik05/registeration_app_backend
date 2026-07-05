@@ -1,4 +1,5 @@
 package com.home.prj.security;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,30 +20,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
-
         http
-
                 .csrf(csrf -> csrf.disable())
-
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.sendError(
+                                    HttpServletResponse.SC_UNAUTHORIZED,
+                                    "Unauthorized");
+                        }))
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
                 .authorizeHttpRequests(auth -> auth
-
                         .requestMatchers(
                                 "/api/users/register",
                                 "/api/auth/login"
                         ).permitAll()
-
                         .anyRequest()
                         .authenticated())
-
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
-
     }
-
 }
