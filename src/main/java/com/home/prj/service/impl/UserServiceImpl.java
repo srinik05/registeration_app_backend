@@ -6,10 +6,15 @@ import com.home.prj.exception.UserAlreadyExistsException;
 import com.home.prj.mapper.UserMapper;
 import com.home.prj.repository.UserRepository;
 import com.home.prj.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    private static final Logger log =
+            LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
 
@@ -19,6 +24,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse registerUser(RegisterRequest request) {
+        log.info("User registered successfully with email {}", request.email());
         validateDuplicateEmail(request.email()); // Check if the email already exists
         var user = UserMapper.toEntity(request); // Convert Record RegisterRequest to User entity
         return UserMapper.toResponse(userRepository.save(user)); // save the user and convert to UserResponse
